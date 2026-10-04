@@ -689,6 +689,7 @@
       teams: { us: recommended(), ryan: rivals.ryan, ltd: rivals.ltd, znzh: rivals.znzh, kang: rivals.kang },
       tab: "ours",
       rival: "ryan",
+      activePreset: "recommended",
     };
   }
   function load() {
@@ -696,7 +697,10 @@
       const saved = localStorage.getItem("cesim-planner-v3");
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.teams && parsed.teams.us && parsed.teams.us.sell) return parsed;
+        if (parsed && parsed.teams && parsed.teams.us && parsed.teams.us.sell) {
+          if (!parsed.activePreset) parsed.activePreset = "";
+          return parsed;
+        }
       }
     } catch (e) {}
     return freshState();
@@ -846,7 +850,8 @@
     html += '<section class="panel' + (state.tab === "ours" ? " on" : "") + '">';
     html += '<p class="note">这是 Ryan United 要填的数。右边的“现在这套”跟着这里变。</p><div class="preset">';
     Object.keys(OURS_PRESETS).forEach(function (key) {
-      html += '<button type="button" data-preset="' + key + '">' + OURS_PRESETS[key].name + "</button>";
+      const on = state.activePreset === key ? ' class="on"' : "";
+      html += '<button type="button" data-preset="' + key + '"' + on + ">" + OURS_PRESETS[key].name + "</button>";
     });
     html += '<button type="button" data-reset="1">恢复全部预设</button></div>' + teamFields("us") + "</section>";
     html += '<section class="panel' + (state.tab === "rivals" ? " on" : "") + '">';
@@ -1049,25 +1054,44 @@
       }
     });
     editor.addEventListener("click", function (e) {
-      const tab = e.target.dataset.tab;
-      if (tab) { state.tab = tab; save(); renderEditor(); return; }
-      const preset = e.target.dataset.preset;
-      if (preset && OURS_PRESETS[preset]) {
-        state.teams.us = OURS_PRESETS[preset].build();
-        save(); renderEditor(); renderResults(); return;
+      const tabBtn = e.target.closest("[data-tab]");
+      if (tabBtn) {
+        state.tab = tabBtn.dataset.tab;
+        save();
+        renderEditor();
+        return;
       }
-      if (e.target.dataset.reset) {
+      const presetBtn = e.target.closest("[data-preset]");
+      if (presetBtn) {
+        const preset = presetBtn.dataset.preset;
+        if (preset && OURS_PRESETS[preset]) {
+          state.teams.us = OURS_PRESETS[preset].build();
+          state.activePreset = preset;
+          save();
+          renderEditor();
+          renderResults();
+        }
+        return;
+      }
+      const resetBtn = e.target.closest("[data-reset]");
+      if (resetBtn) {
         localStorage.removeItem("cesim-planner-v3");
         state = freshState();
-        renderEditor(); renderResults(); return;
+        state.activePreset = "";
+        renderEditor();
+        renderResults();
+        return;
       }
-      if (e.target.dataset.rivals === "inertia") {
+      const rivalsBtn = e.target.closest("[data-rivals]");
+      if (rivalsBtn && rivalsBtn.dataset.rivals === "inertia") {
         const rivals = rivalInertia();
         state.teams.ryan = rivals.ryan;
         state.teams.ltd = rivals.ltd;
         state.teams.znzh = rivals.znzh;
         state.teams.kang = rivals.kang;
-        save(); renderEditor(); renderResults();
+        save();
+        renderEditor();
+        renderResults();
       }
     });
   }

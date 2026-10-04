@@ -64,7 +64,9 @@ h1 { margin: 0; font-size: 28px; font-weight: 650; letter-spacing: -0.03em; }
   padding: 6px 12px;
   font-size: 13px;
 }
-.tabs button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.tabs button.on,
+.preset button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.preset button.on .en { color: rgba(255, 255, 255, 0.82); }
 .rowbtns, .preset { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 14px; }
 
 .note {
