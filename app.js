@@ -188,6 +188,162 @@
     return t;
   }
 
+  /** 练习轮 Ryan 式：燃油原价走量，混动高价少功能，产线尽量留给燃油 */
+  function borrowedPro() {
+    const t = blankTeam();
+    t.sell.hybrid = true;
+    t.growth = { usa: 2, china: 0, europe: 4 };
+    t.share.comb = { usa: 16, china: 18, europe: 16 };
+    t.share.hybrid = { usa: 4, china: 0.5, europe: 4 };
+    setProduct(t, "comb", {
+      price: { usa: 18500, china: 125000, europe: 20000 },
+      features: { usa: 3, china: 6, europe: 2 },
+      promo: { usa: 500000, china: 250000, europe: 500000 },
+      focus: { usa: "balanced", china: "feat", europe: "balanced" },
+    });
+    setProduct(t, "hybrid", {
+      price: { usa: 35000, china: 280000, europe: 34000 },
+      features: { usa: 1, china: 1, europe: 1 },
+      promo: { usa: 900000, china: 0, europe: 400000 },
+      focus: { usa: "brand", china: "balanced", europe: "brand" },
+    });
+    t.alloc = {
+      usa: { comb: 100, hybrid: 0, ev: 0, h2: 0 },
+      china: { comb: 100, hybrid: 0, ev: 0, h2: 0 },
+    };
+    t.contract = {
+      usa: { comb: 200, hybrid: 0, ev: 0, h2: 0 },
+      china: { comb: 0, hybrid: 280, ev: 0, h2: 0 },
+    };
+    t.hr = { headcount: 5000, wage: 5500, training: 600 };
+    t.extraK = 550000;
+    return t;
+  }
+
+  /** 不靠抬价：混动略低于高价队，用广告和外包抢份额 */
+  function shareGrab() {
+    const t = blankTeam();
+    t.sell.hybrid = true;
+    t.growth = { usa: 3, china: 1, europe: 5 };
+    t.share.comb = { usa: 14, china: 16, europe: 14 };
+    t.share.hybrid = { usa: 7, china: 3, europe: 6 };
+    setProduct(t, "comb", {
+      price: { usa: 18800, china: 125000, europe: 20200 },
+      features: { usa: 3, china: 5, europe: 2 },
+      promo: { usa: 550000, china: 280000, europe: 600000 },
+      focus: { usa: "balanced", china: "feat", europe: "balanced" },
+    });
+    setProduct(t, "hybrid", {
+      price: { usa: 27200, china: 168000, europe: 24800 },
+      features: { usa: 2, china: 2, europe: 2 },
+      promo: { usa: 1000000, china: 350000, europe: 850000 },
+      focus: { usa: "brand", china: "brand", europe: "brand" },
+    });
+    t.alloc = {
+      usa: { comb: 78, hybrid: 12, ev: 0, h2: 0 },
+      china: { comb: 70, hybrid: 12, ev: 0, h2: 0 },
+    };
+    t.contract = {
+      usa: { comb: 60, hybrid: 220, ev: 0, h2: 0 },
+      china: { comb: 40, hybrid: 160, ev: 0, h2: 0 },
+    };
+    t.hr = { headcount: 5200, wage: 6200, training: 800 };
+    return t;
+  }
+
+  /** 少赚这一轮：产线上留混动，换学习曲线和下一轮自产成本 */
+  function futureLeap() {
+    const t = blankTeam();
+    t.sell.hybrid = true;
+    t.growth = { usa: 2, china: 0, europe: 3 };
+    t.share.comb = { usa: 15, china: 17, europe: 15 };
+    t.share.hybrid = { usa: 5, china: 2, europe: 4 };
+    setProduct(t, "comb", {
+      price: { usa: 19000, china: 125000, europe: 20500 },
+      features: { usa: 3, china: 4, europe: 2 },
+      promo: { usa: 480000, china: 260000, europe: 520000 },
+      focus: { usa: "balanced", china: "balanced", europe: "balanced" },
+    });
+    setProduct(t, "hybrid", {
+      price: { usa: 28500, china: 158000, europe: 26500 },
+      features: { usa: 3, china: 3, europe: 3 },
+      promo: { usa: 450000, china: 180000, europe: 450000 },
+      focus: { usa: "balanced", china: "balanced", europe: "balanced" },
+    });
+    t.alloc = {
+      usa: { comb: 62, hybrid: 18, ev: 0, h2: 0 },
+      china: { comb: 58, hybrid: 18, ev: 0, h2: 0 },
+    };
+    t.contract = {
+      usa: { comb: 70, hybrid: 120, ev: 0, h2: 0 },
+      china: { comb: 60, hybrid: 80, ev: 0, h2: 0 },
+    };
+    t.hr = { headcount: 5000, wage: 6500, training: 950 };
+    return t;
+  }
+
+  /** 避开美国高价混战，欧洲混动用品牌吃利润，中国混动少投 */
+  function europeFirst() {
+    const t = blankTeam();
+    t.sell.hybrid = true;
+    t.growth = { usa: 1, china: -1, europe: 5 };
+    t.share.comb = { usa: 16, china: 17, europe: 15 };
+    t.share.hybrid = { usa: 3, china: 1, europe: 7 };
+    setProduct(t, "comb", {
+      price: { usa: 18500, china: 125000, europe: 20000 },
+      features: { usa: 3, china: 5, europe: 3 },
+      promo: { usa: 450000, china: 250000, europe: 650000 },
+      focus: { usa: "balanced", china: "feat", europe: "brand" },
+    });
+    setProduct(t, "hybrid", {
+      price: { usa: 29500, china: 190000, europe: 33500 },
+      features: { usa: 1, china: 1, europe: 2 },
+      promo: { usa: 400000, china: 80000, europe: 750000 },
+      focus: { usa: "balanced", china: "balanced", europe: "brand" },
+    });
+    t.alloc = {
+      usa: { comb: 88, hybrid: 0, ev: 0, h2: 0 },
+      china: { comb: 85, hybrid: 0, ev: 0, h2: 0 },
+    };
+    t.contract = {
+      usa: { comb: 120, hybrid: 80, ev: 0, h2: 0 },
+      china: { comb: 50, hybrid: 60, ev: 0, h2: 0 },
+    };
+    t.hr = { headcount: 5000, wage: 5800, training: 700 };
+    return t;
+  }
+
+  /** 工厂只造燃油；混动全外包，用产线学习换时间 */
+  function outsourceHybrid() {
+    const t = blankTeam();
+    t.sell.hybrid = true;
+    t.growth = { usa: 2, china: 0, europe: 4 };
+    t.share.comb = { usa: 16, china: 17, europe: 16 };
+    t.share.hybrid = { usa: 5, china: 2, europe: 4 };
+    setProduct(t, "comb", {
+      price: { usa: 18700, china: 124000, europe: 20100 },
+      features: { usa: 3, china: 5, europe: 2 },
+      promo: { usa: 520000, china: 270000, europe: 550000 },
+      focus: { usa: "balanced", china: "feat", europe: "balanced" },
+    });
+    setProduct(t, "hybrid", {
+      price: { usa: 29800, china: 172000, europe: 27800 },
+      features: { usa: 2, china: 2, europe: 2 },
+      promo: { usa: 650000, china: 220000, europe: 500000 },
+      focus: { usa: "brand", china: "brand", europe: "brand" },
+    });
+    t.alloc = {
+      usa: { comb: 100, hybrid: 0, ev: 0, h2: 0 },
+      china: { comb: 100, hybrid: 0, ev: 0, h2: 0 },
+    };
+    t.contract = {
+      usa: { comb: 100, hybrid: 180, ev: 0, h2: 0 },
+      china: { comb: 30, hybrid: 200, ev: 0, h2: 0 },
+    };
+    t.hr = { headcount: 5000, wage: 6000, training: 750 };
+    return t;
+  }
+
   function combustionOnly() {
     const t = recommended();
     t.sell.hybrid = false;
@@ -510,12 +666,22 @@
   function wan(units) { return (units / 10000).toFixed(1) + " 万辆"; }
 
   const OURS_PRESETS = {
+    borrowedPro: { name: bi("借鉴进阶", "Borrowed pro"), build: borrowedPro },
     borrowed: { name: bi("借鉴", "Borrowed"), build: borrowed },
+    shareGrab: { name: bi("份额抢占", "Share grab"), build: shareGrab },
+    futureLeap: { name: bi("未来跨越", "Future leap"), build: futureLeap },
+    europeFirst: { name: bi("欧洲先手", "Europe first"), build: europeFirst },
+    outsourceHybrid: { name: bi("混动外包", "Outsource hybrid"), build: outsourceHybrid },
     recommended: { name: bi("建议", "Recommended"), build: recommended },
     conservative: { name: bi("保守", "Conservative"), build: conservative },
     aggressive: { name: bi("激进", "Aggressive"), build: aggressive },
     combustion: { name: bi("只卖燃油", "Combustion only"), build: combustionOnly },
   };
+  /** 右侧「方案对照」展示顺序（含份额抢占、欧洲先手） */
+  const SCHEME_COMPARE_KEYS = [
+    "borrowedPro", "shareGrab", "europeFirst", "borrowed", "futureLeap", "outsourceHybrid",
+    "recommended", "conservative", "aggressive", "combustion",
+  ];
   let state = null;
   function freshState() {
     const rivals = rivalInertia();
@@ -663,7 +829,7 @@
       + "<h2>这一轮怎么选</h2>"
       + "<p>前两轮只做燃油车和混动。燃油车自己造，混动以外包为主，自己的线上留大约 10%。电动和氢能先不买。转移价格四条都用 1.00。关税按转移价格算，抬高乘数省下的税补不回关税。</p>"
       + "<p>方案不按这一轮毛利排第一。毛利、混动有没有座位、库存、后面几轮能不能接着卖，要一起看。只卖燃油往往这一轮更高，但混动份额是 0。</p>"
-      + "<p>练习轮里利润最高的 Ryan，燃油车价格几乎没动，混动卖得很贵，功能只有 1 个。Ryan Ltd. 把功能堆到 11，广告花了 86 亿美元，利润反而少一截。借鉴方案学的是前一种：燃油当现金牛，混动当利润款。广告集中在美国和欧洲混动，中国混动少打。第一轮不盖新厂。</p>"
+      + "<p>练习轮里利润最高的 Ryan，燃油车价格几乎没动，混动卖得很贵，功能只有 1 个。Ryan Ltd. 把功能堆到 11，广告花了 86 亿美元，利润反而少一截。「借鉴进阶」学 Ryan：产线全给燃油，混动在中国外包，美国混动 35,000、功能 1、中国混动几乎不打广告。另有四条不同思路：份额抢占（略低价+大广告）、未来跨越（产线留混动换学习）、欧洲先手（避开美国高价战）、混动外包（工厂只造燃油）。</p>"
       + "<p>推广大约花掉这款车毛利的 10%，新车可以再多一点。份额格子是占整个市场的比例。混动不要填 20。</p>"
       + "<h2>模型的起点</h2>"
       + "<p>市场基数用练习轮开局：美国 359.5 万辆，中国 256.5 万辆，欧洲 399 万辆。每队产能先按美国 140 万辆、中国 50 万辆。练习轮报表里美国 7 座厂、中国 2 座厂，满产就是这个数。自产燃油开局大约 13,870 美元，第一轮从这里重开，不用练习轮结束时大约 11,600 的成本。外包单价用的是成本报告：燃油大约 11,700 美元，混动大约 18,050 美元。这是对照模型，不是 Cesim 内部公式。交卷以系统预测页为准。</p>"
@@ -698,9 +864,35 @@
     root.innerHTML = html;
   }
   const PATHS = {
+    borrowedPro: {
+      title: "借鉴进阶 · 学 Ryan，不是学 Ltd.",
+      aim: "燃油维持开局价，中国燃油加功能。混动美国 35,000、欧洲 34,000、中国高价少投广告。产线 100% 燃油，混动靠中国外包。许可费约 5.5 亿填在额外开支。第一轮不盖厂。",
+      kind: "profit",
+    },
     borrowed: {
       title: "借鉴 · 燃油现金牛，混动卖高价",
-      aim: "燃油保持普通价、功能少。混动学练习轮里更赚的那队：价格高、功能只留 2 个、广告集中在美国和欧洲。不学 11 个功能，也不学每个市场 20 亿广告。",
+      aim: "燃油保持普通价、功能少。混动价格高、功能 2 个、广告集中美欧。产线上仍留约 8% 混动。",
+      kind: "profit",
+    },
+    shareGrab: {
+      title: "份额抢占 · 不靠抬价",
+      aim: "混动定在美欧略低于会抄 Ryan 的高价队，用更大广告和更多外包抢第一轮混动销量。单台毛利低，但 footprint 和销量高，适合三四队一起卖混动时。",
+      kind: "innov",
+    },
+    futureLeap: {
+      title: "未来跨越 · 这一轮少赚，换下一轮成本",
+      aim: "美中都留约 18% 产线做混动，培训工资略高。混动价格中等、功能 3，不跟高价战。第二轮起自产混动成本会掉得更快，为后面电动留产线经验。",
+      kind: "innov",
+    },
+    europeFirst: {
+      title: "欧洲先手 · 换战场",
+      aim: "欧洲市场大、对价不太敏感。混动广告和份额重心放欧洲，美国混动不跟 35,000 硬顶，中国混动少备货。用地理差赚钱，不是单格抬价。",
+      kind: "innov",
+    },
+    outsourceHybrid: {
+      title: "混动外包 · 工厂专精燃油",
+      aim: "自产线只跑燃油，混动全外包。赚的是燃油学习曲线 + 混动中等价差的组合，不是混动溢价战。",
+      kind: "innov",
     },
     recommended: {
       title: "建议 · 先占混动座位",
@@ -717,6 +909,7 @@
     combustion: {
       title: "只卖燃油 · 这一轮利润最高",
       aim: "不做混动。这一轮最干净，下一轮混动要从零买许可。",
+      kind: "base",
     },
   };
   function lookAt(team, report) {
@@ -748,7 +941,7 @@
       return { id: m.id, name: m.name, ours: !!m.ours, profit: result.teams[m.id].profit };
     }).sort(function (a, b) { return b.profit - a.profit; });
     const maxAbs = Math.max.apply(null, ranked.map(function (row) { return Math.abs(row.profit); }).concat([1]));
-    const schemes = Object.keys(OURS_PRESETS).map(function (key) {
+    const schemes = SCHEME_COMPARE_KEYS.filter(function (key) { return OURS_PRESETS[key]; }).map(function (key) {
       const alt = JSON.parse(JSON.stringify(state.teams));
       alt.us = OURS_PRESETS[key].build();
       return { key: key, name: OURS_PRESETS[key].name, team: alt.us, report: compute(alt).teams.us };
@@ -788,15 +981,19 @@
       html += "<tr><td>" + row[0] + "</td><td>" + row[1] + " 亿美元</td><td>" + row[2] + "</td></tr>";
     });
     html += '</tbody></table><p class="note">这是练习轮财报，单位亿美元。第一轮会清零。Ryan Ltd. 中国只亏了大约 0.3 亿美元，美国混动贡献大约 108 亿美元。赚得最多的两队都卖了混动，而且分红都是 0，股东回报来自股价。</p>';
-    html += "<h2>四条路，不按毛利排第一</h2>";
-    html += '<p class="note">值得先看的是「借鉴」。它学的是练习轮里利润更高的 Ryan：燃油不抬价，混动敢标高价，功能不堆。只卖燃油这一轮可以更高一点，但混动座位是 0。改左边的数，「现在这套」会跟着变。</p>';
+    html += "<h2>" + bi("方案对照", "Strategy compare") + " · " + bi("不按毛利排第一", "Not ranked by gross profit alone") + "</h2>";
+    html += '<p class="note">' + bi("借鉴进阶", "Borrowed pro") + " 学 Ryan 高价混动；" + bi("份额抢占 / 欧洲先手 / 未来跨越 / 混动外包", "Share grab / Europe first / Future leap / Outsource") + " 是不同打法：用广告、地理、产线学习或外包结构赚钱，不是一味抬价。只卖燃油毛利可能更高，但混动座位是 0。点左边按钮可载入整套数。</p>";
     html += '<div class="plans">';
     schemes.forEach(function (s) {
       const view = lookAt(s.team, s.report);
       const path = PATHS[s.key];
       const title = path ? path.title : s.name;
       const aim = path ? path.aim : "左边现在填的这套。";
-      html += '<article class="plan' + (s.key === "borrowed" ? " main" : "") + '"><h3>' + title + "</h3><p class=\"aim\">" + aim + "</p>";
+      let cls = "plan";
+      if (s.key === "borrowedPro") cls += " main";
+      else if (s.key === "shareGrab" || s.key === "europeFirst") cls += " innov highlight";
+      else if (path && path.kind === "innov") cls += " innov";
+      html += '<article class="' + cls + '"><h3>' + title + "</h3><p class=\"aim\">" + aim + "</p>";
       html += '<div class="nums"><div>' + bi("这一轮毛利", "Gross profit") + "<strong>" + yi(s.report.profit) + "</strong></div>";
       html += "<div>" + bi("混动卖出", "Hybrid sales") + "<strong>" + wan(view.hy) + "</strong></div>";
       html += "<div>" + bi("库存", "Inventory") + "<strong>" + view.risk + "</strong></div></div>";
@@ -874,7 +1071,21 @@
       }
     });
   }
-  const api = { compute: compute, recommended: recommended, borrowed: borrowed, conservative: conservative, aggressive: aggressive, combustionOnly: combustionOnly, rivalInertia: rivalInertia, freshTeams: function () { return freshState().teams; } };
+  const api = {
+    compute: compute,
+    recommended: recommended,
+    borrowed: borrowed,
+    borrowedPro: borrowedPro,
+    shareGrab: shareGrab,
+    futureLeap: futureLeap,
+    europeFirst: europeFirst,
+    outsourceHybrid: outsourceHybrid,
+    conservative: conservative,
+    aggressive: aggressive,
+    combustionOnly: combustionOnly,
+    rivalInertia: rivalInertia,
+    freshTeams: function () { return freshState().teams; },
+  };
   if (typeof window !== "undefined") {
     window.CesimPlanner = api;
     if (document.getElementById("editor")) boot();
