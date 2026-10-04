@@ -158,6 +158,36 @@
     return t;
   }
 
+  function borrowed() {
+    const t = blankTeam();
+    t.sell.hybrid = true;
+    t.growth = { usa: 2, china: 0, europe: 4 };
+    t.share.comb = { usa: 16, china: 17, europe: 16 };
+    t.share.hybrid = { usa: 4, china: 2, europe: 3 };
+    setProduct(t, "comb", {
+      price: { usa: 19000, china: 125000, europe: 20500 },
+      features: { usa: 3, china: 4, europe: 2 },
+      promo: { usa: 500000, china: 250000, europe: 550000 },
+      focus: { usa: "balanced", china: "balanced", europe: "balanced" },
+    });
+    setProduct(t, "hybrid", {
+      price: { usa: 34000, china: 200000, europe: 32000 },
+      features: { usa: 2, china: 2, europe: 2 },
+      promo: { usa: 800000, china: 250000, europe: 700000 },
+      focus: { usa: "foot", china: "brand", europe: "foot" },
+    });
+    t.alloc = {
+      usa: { comb: 75, hybrid: 8, ev: 0, h2: 0 },
+      china: { comb: 72, hybrid: 8, ev: 0, h2: 0 },
+    };
+    t.contract = {
+      usa: { comb: 40, hybrid: 60, ev: 0, h2: 0 },
+      china: { comb: 50, hybrid: 20, ev: 0, h2: 0 },
+    };
+    t.hr = { headcount: 5000, wage: 6000, training: 700 };
+    return t;
+  }
+
   function combustionOnly() {
     const t = recommended();
     t.sell.hybrid = false;
@@ -480,6 +510,7 @@
   function wan(units) { return (units / 10000).toFixed(1) + " 万辆"; }
 
   const OURS_PRESETS = {
+    borrowed: { name: bi("借鉴", "Borrowed"), build: borrowed },
     recommended: { name: bi("建议", "Recommended"), build: recommended },
     conservative: { name: bi("保守", "Conservative"), build: conservative },
     aggressive: { name: bi("激进", "Aggressive"), build: aggressive },
@@ -632,6 +663,7 @@
       + "<h2>这一轮怎么选</h2>"
       + "<p>前两轮只做燃油车和混动。燃油车自己造，混动以外包为主，自己的线上留大约 10%。电动和氢能先不买。转移价格四条都用 1.00。关税按转移价格算，抬高乘数省下的税补不回关税。</p>"
       + "<p>方案不按这一轮毛利排第一。毛利、混动有没有座位、库存、后面几轮能不能接着卖，要一起看。只卖燃油往往这一轮更高，但混动份额是 0。</p>"
+      + "<p>练习轮里利润最高的 Ryan，燃油车价格几乎没动，混动卖得很贵，功能只有 1 个。Ryan Ltd. 把功能堆到 11，广告花了 86 亿美元，利润反而少一截。借鉴方案学的是前一种：燃油当现金牛，混动当利润款。广告集中在美国和欧洲混动，中国混动少打。第一轮不盖新厂。</p>"
       + "<p>推广大约花掉这款车毛利的 10%，新车可以再多一点。份额格子是占整个市场的比例。混动不要填 20。</p>"
       + "<h2>模型的起点</h2>"
       + "<p>市场基数用练习轮开局：美国 359.5 万辆，中国 256.5 万辆，欧洲 399 万辆。每队产能先按美国 140 万辆、中国 50 万辆。练习轮报表里美国 7 座厂、中国 2 座厂，满产就是这个数。自产燃油开局大约 13,870 美元，第一轮从这里重开，不用练习轮结束时大约 11,600 的成本。外包单价用的是成本报告：燃油大约 11,700 美元，混动大约 18,050 美元。这是对照模型，不是 Cesim 内部公式。交卷以系统预测页为准。</p>"
@@ -666,9 +698,13 @@
     root.innerHTML = html;
   }
   const PATHS = {
+    borrowed: {
+      title: "借鉴 · 燃油现金牛，混动卖高价",
+      aim: "燃油保持普通价、功能少。混动学练习轮里更赚的那队：价格高、功能只留 2 个、广告集中在美国和欧洲。不学 11 个功能，也不学每个市场 20 亿广告。",
+    },
     recommended: {
       title: "建议 · 先占混动座位",
-      aim: "这一轮要有利润，同时让混动下一轮已经有份额，自己的产线上开始学习。",
+      aim: "混动价格更稳。这一轮利润和座位都有，但混动一台车赚得少。",
     },
     conservative: {
       title: "保守 · 先稳住燃油",
@@ -753,14 +789,14 @@
     });
     html += '</tbody></table><p class="note">这是练习轮财报，单位亿美元。第一轮会清零。Ryan Ltd. 中国只亏了大约 0.3 亿美元，美国混动贡献大约 108 亿美元。赚得最多的两队都卖了混动，而且分红都是 0，股东回报来自股价。</p>';
     html += "<h2>四条路，不按毛利排第一</h2>";
-    html += '<p class="note">主策略是「建议」。只卖燃油这一轮利润可以更高，但混动座位是 0，和前两轮要做混动的方向不一致。改左边的数，「现在这套」会跟着变。</p>';
+    html += '<p class="note">值得先看的是「借鉴」。它学的是练习轮里利润更高的 Ryan：燃油不抬价，混动敢标高价，功能不堆。只卖燃油这一轮可以更高一点，但混动座位是 0。改左边的数，「现在这套」会跟着变。</p>';
     html += '<div class="plans">';
     schemes.forEach(function (s) {
       const view = lookAt(s.team, s.report);
       const path = PATHS[s.key];
       const title = path ? path.title : s.name;
       const aim = path ? path.aim : "左边现在填的这套。";
-      html += '<article class="plan' + (s.key === "recommended" ? " main" : "") + '"><h3>' + title + "</h3><p class=\"aim\">" + aim + "</p>";
+      html += '<article class="plan' + (s.key === "borrowed" ? " main" : "") + '"><h3>' + title + "</h3><p class=\"aim\">" + aim + "</p>";
       html += '<div class="nums"><div>' + bi("这一轮毛利", "Gross profit") + "<strong>" + yi(s.report.profit) + "</strong></div>";
       html += "<div>" + bi("混动卖出", "Hybrid sales") + "<strong>" + wan(view.hy) + "</strong></div>";
       html += "<div>" + bi("库存", "Inventory") + "<strong>" + view.risk + "</strong></div></div>";
@@ -838,7 +874,7 @@
       }
     });
   }
-  const api = { compute: compute, recommended: recommended, conservative: conservative, aggressive: aggressive, combustionOnly: combustionOnly, rivalInertia: rivalInertia, freshTeams: function () { return freshState().teams; } };
+  const api = { compute: compute, recommended: recommended, borrowed: borrowed, conservative: conservative, aggressive: aggressive, combustionOnly: combustionOnly, rivalInertia: rivalInertia, freshTeams: function () { return freshState().teams; } };
   if (typeof window !== "undefined") {
     window.CesimPlanner = api;
     if (document.getElementById("editor")) boot();
