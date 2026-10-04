@@ -754,15 +754,20 @@
     html += '</tbody></table><p class="note">这是练习轮财报，单位亿美元。第一轮会清零。Ryan Ltd. 中国只亏了大约 0.3 亿美元，美国混动贡献大约 108 亿美元。赚得最多的两队都卖了混动，而且分红都是 0，股东回报来自股价。</p>';
     html += "<h2>四条路，不按毛利排第一</h2>";
     html += '<p class="note">主策略是「建议」。只卖燃油这一轮利润可以更高，但混动座位是 0，和前两轮要做混动的方向不一致。改左边的数，「现在这套」会跟着变。</p>';
-    html += '<table class="score"><thead><tr><th>' + bi("方案", "Plan") + '</th><th class="num">' + bi("这一轮毛利", "Gross profit") + '</th><th class="num">' + bi("混动卖出", "Hybrid sales") + '</th><th>' + bi("库存", "Inventory") + '</th><th>' + bi("后面几轮", "Later rounds") + '</th><th>' + bi("和其他队", "Other teams") + "</th></tr></thead><tbody>";
+    html += '<div class="plans">';
     schemes.forEach(function (s) {
       const view = lookAt(s.team, s.report);
       const path = PATHS[s.key];
       const title = path ? path.title : s.name;
       const aim = path ? path.aim : "左边现在填的这套。";
-      html += "<tr" + (s.key === "recommended" ? ' class="main"' : "") + "><td><strong>" + title + "</strong><br>" + aim + "</td><td class=\"num\">" + yi(s.report.profit) + "</td><td class=\"num\">" + wan(view.hy) + "</td><td>" + view.risk + "</td><td>" + view.future + "</td><td>" + view.rivals + "</td></tr>";
+      html += '<article class="plan' + (s.key === "recommended" ? " main" : "") + '"><h3>' + title + "</h3><p class=\"aim\">" + aim + "</p>";
+      html += '<div class="nums"><div>' + bi("这一轮毛利", "Gross profit") + "<strong>" + yi(s.report.profit) + "</strong></div>";
+      html += "<div>" + bi("混动卖出", "Hybrid sales") + "<strong>" + wan(view.hy) + "</strong></div>";
+      html += "<div>" + bi("库存", "Inventory") + "<strong>" + view.risk + "</strong></div></div>";
+      html += "<p>" + bi("后面几轮", "Later rounds") + "：" + view.future + "</p>";
+      html += "<p>" + bi("和其他队", "Other teams") + "：" + view.rivals + "</p></article>";
     });
-    html += "</tbody></table>";
+    html += "</div>";
     html += '<p class="note">许可费以研发页上的数字为准，填进「许可等额外开支」。填上以后这一轮毛利会下降，混动下一轮才能卖。这里还没替你填那个费用。</p>';
     html += "<h2>" + bi("我们各市场", "Our markets") + "</h2><table><thead><tr><th>" + bi("市场", "Market") + "</th><th>" + bi("实销", "Sales") + "</th><th>" + bi("缺货", "Unmet") + "</th><th>" + bi("毛利近似", "Gross profit, approx.") + "</th></tr></thead><tbody>";
     REGIONS.forEach(function (r) {

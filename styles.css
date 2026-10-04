@@ -129,9 +129,20 @@ table {
 }
 th, td { text-align: right; padding: 6px 4px; border-bottom: 1px solid var(--line); }
 th:first-child, td:first-child { text-align: left; }
-table.score th, table.score td { text-align: left; vertical-align: top; line-height: 1.45; }
-table.score td.num, table.score th.num { text-align: right; white-space: nowrap; }
-table.score tr.main td { background: var(--accent-soft); }
+.plans { display: flex; flex-direction: column; gap: 8px; }
+.plan {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.plan.main { border-color: var(--accent); background: var(--accent-soft); }
+.plan h3 { margin: 0 0 6px; color: var(--ink); font-size: 15px; font-weight: 650; }
+.plan .aim { margin: 0 0 10px; font-size: 14px; line-height: 1.6; }
+.plan .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 8px; }
+.plan .nums div { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.plan .nums strong { display: block; color: var(--ink); font-size: 15px; margin-top: 2px; font-weight: 650; }
+.plan p { margin: 0 0 4px; font-size: 13px; line-height: 1.6; }
 th { color: var(--muted); font-weight: 600; font-size: 12px; }
 
 .kpi { margin: 0 0 4px; font-size: 13px; color: var(--muted); }
