@@ -666,16 +666,16 @@
   function wan(units) { return (units / 10000).toFixed(1) + " 万辆"; }
 
   const OURS_PRESETS = {
-    borrowedPro: { name: bi("借鉴进阶", "Borrowed pro"), build: borrowedPro },
-    borrowed: { name: bi("借鉴", "Borrowed"), build: borrowed },
-    shareGrab: { name: bi("份额抢占", "Share grab"), build: shareGrab },
-    futureLeap: { name: bi("未来跨越", "Future leap"), build: futureLeap },
-    europeFirst: { name: bi("欧洲先手", "Europe first"), build: europeFirst },
-    outsourceHybrid: { name: bi("混动外包", "Outsource hybrid"), build: outsourceHybrid },
-    recommended: { name: bi("建议", "Recommended"), build: recommended },
-    conservative: { name: bi("保守", "Conservative"), build: conservative },
-    aggressive: { name: bi("激进", "Aggressive"), build: aggressive },
-    combustion: { name: bi("只卖燃油", "Combustion only"), build: combustionOnly },
+    borrowedPro: { name: presetLabel("借鉴进阶", "Borrowed pro"), build: borrowedPro },
+    borrowed: { name: presetLabel("借鉴", "Borrowed"), build: borrowed },
+    shareGrab: { name: presetLabel("份额抢占", "Share grab"), build: shareGrab },
+    futureLeap: { name: presetLabel("未来跨越", "Future leap"), build: futureLeap },
+    europeFirst: { name: presetLabel("欧洲先手", "Europe first"), build: europeFirst },
+    outsourceHybrid: { name: presetLabel("混动外包", "Outsource hybrid"), build: outsourceHybrid },
+    recommended: { name: presetLabel("建议", "Recommended"), build: recommended },
+    conservative: { name: presetLabel("保守", "Conservative"), build: conservative },
+    aggressive: { name: presetLabel("激进", "Aggressive"), build: aggressive },
+    combustion: { name: presetLabel("只卖燃油", "Combustion only"), build: combustionOnly },
   };
   /** 右侧「方案对照」展示顺序（含份额抢占、欧洲先手） */
   const SCHEME_COMPARE_KEYS = [
@@ -693,23 +693,32 @@
     };
   }
   function load() {
+    const base = freshState();
     try {
       const saved = localStorage.getItem("cesim-planner-v3");
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && parsed.teams && parsed.teams.us && parsed.teams.us.sell) {
+          TEAMS.forEach(function (m) {
+            if (!parsed.teams[m.id]) parsed.teams[m.id] = base.teams[m.id];
+          });
+          parsed.tab = parsed.tab || base.tab;
+          parsed.rival = parsed.rival || base.rival;
           if (!parsed.activePreset) parsed.activePreset = "";
           return parsed;
         }
       }
     } catch (e) {}
-    return freshState();
+    return base;
   }
   function save() {
     try { localStorage.setItem("cesim-planner-v3", JSON.stringify(state)); } catch (e) {}
   }
   function bi(zh, en) {
     return zh + '<span class="en">' + en + "</span>";
+  }
+  function presetLabel(zh, en) {
+    return zh + " · " + en;
   }
   function field(path, value, step, label) {
     return '<label class="field">' + label + '<input type="number" step="' + step + '" data-path="' + path + '" value="' + value + '"></label>';
@@ -1034,16 +1043,22 @@
     else if (el.type === "number") value = el.value === "" ? 0 : Number(el.value);
     else value = el.value;
     setPath(state, el.dataset.path, value);
+    if (el.dataset.path.indexOf("teams.us.") === 0) state.activePreset = "";
     save();
     renderResults();
+    if (el.dataset.path.indexOf("teams.us.") === 0) {
+      const presetBar = document.querySelector(".preset");
+      if (presetBar) {
+        presetBar.querySelectorAll("button.on").forEach(function (btn) { btn.classList.remove("on"); });
+      }
+    }
     const body = document.querySelector("#panel-sheet tbody");
     if (body) body.innerHTML = sheetRows();
   }
   function boot() {
     state = load();
-    renderEditor();
-    renderResults();
     const editor = document.getElementById("editor");
+    if (!editor) return;
     editor.addEventListener("input", onInput);
     editor.addEventListener("change", function (e) {
       onInput(e);
@@ -1094,6 +1109,16 @@
         renderResults();
       }
     });
+    renderEditor();
+    try {
+      renderResults();
+    } catch (err) {
+      console.error("Cesim planner render failed:", err);
+      const results = document.getElementById("results");
+      if (results) {
+        results.innerHTML = '<p class="warnbox">页面数据不完整，已停止计算。请点「恢复全部预设」或清除本站缓存后刷新。</p>';
+      }
+    }
   }
   const api = {
     compute: compute,
