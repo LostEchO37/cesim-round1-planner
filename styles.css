@@ -138,6 +138,7 @@ th:first-child, td:first-child { text-align: left; }
 }
 .plan.main { border-color: var(--accent); background: var(--accent-soft); }
 .plan.innov { border-color: #5a4d8c; background: #f0edf8; }
+.plan.innov.highlight { border-width: 2px; box-shadow: 0 0 0 1px rgba(90, 77, 140, 0.15); }
 .plan h3 { margin: 0 0 6px; color: var(--ink); font-size: 15px; font-weight: 650; }
 .plan .aim { margin: 0 0 10px; font-size: 14px; line-height: 1.6; }
 .plan .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 8px; }
